@@ -3,10 +3,26 @@ var LinkedList = function() {
   list.head = null;
   list.tail = null;
 
+
+// add to the back of the array but adding a node
+
+
   list.addToTail = function(value) {
+    list.tail = Node(value)
   };
 
+// remove the head aka first node passed in
+// if list.tail !== null then make list.head == list.tail
+// remove the list.head
+// return list.head
+
   list.removeHead = function() {
+    if(list.tail !== null) {
+      list.head = list.tail;
+      var first = list.head;
+      delete list.head;
+      return first;
+    }
   };
 
   list.contains = function(target) {
