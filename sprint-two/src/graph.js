@@ -1,107 +1,87 @@
 // Instantiate a new graph
 var Graph = function() {
-  this.newNode= {};
-  this.nodesArr = [];
-  this.edgesArr = []
+  this.nodes = {};
+  this.edges = {};
 };
 
 // Add a node to the graph, passing in the node's value.
-// want to push the new node value as an array into the nodesArr
+// just add to the node object
+// this will look like {{1:1}, {2:2}, {3:3}}
 Graph.prototype.addNode = function(node) {
- this.newNode.value = node;
- this.nodesArr.push(this.newNode);
- this.edgesArr.push([this.newNode.value]);
- // console.log(this.edgesArr);
- // console.log(this.nodesArr);
+ this.nodes[node] = node;
+ console.log(this.nodes[node] = node)
+ console.log("this is the nodes object with addNode: " + this.nodes)
 };
 
 // Return a boolean value indicating if the value passed to contains is represented in the graph.
+// check to see if the nodes object we created has the given node
+	// if it does, return true if not return false
 Graph.prototype.contains = function(node) {
-  for (var key in this.newNode){
-    if (this.newNode[key] === node){
-      return true;
-     }
+  if (this.nodes[node] === node) {
+  	return true;
+  } else {
+  	return false;
   }
-  return false;
 };
 
 // Removes a node from the graph.
 Graph.prototype.removeNode = function(node) {
-	delete this.newNode.value;
-	this.edgesArr.splice(this.node)
-	return this.edgesArr;
+	for (var key in this.nodes) {
+		if (this.nodes[key] === node) {
+			delete this.nodes[key];
+		}
+	}
+	for (var key in this.edges) {
+		console.log('this is edges[key]' +this.edges[key])
+		if (this.edges[key][0] === node) {
+			delete this.edges[key];
+		}
+	}
 };
 
 // Returns a boolean indicating whether two specified nodes are connected.  Pass in the values contained in each of the two nodes.
-// if fromNode or toNode has a refence inside of their [] then return true.
-// We are checking if [[fromNode, toNode]] kind of thing
-// fromNode is a number
-// 
+// From add edge we know that the values in the object start from 0-1
+	// 0 = fromNode, 1 = toNode
+// loop through the object
+// check if the positions equal fromNode or toNode
+	// if so return true else return false
 
 Graph.prototype.hasEdge = function(fromNode, toNode) {
-		console.log(fromNode)
-
-	for (var i = 0; i < this.edgesArr.length; i++) {
- 		if (this.edgesArr[i].includes(toNode) && this.edgesArr[i].includes(fromNode)) {
- 			return true;
- 		}
-
- 		return false; 
- 	}
+	for (var key in this.edges) {
+		console.log('this is the first value: ' + this.edges[key][0])
+		console.log('this is the second value: ' + this.edges[key][1])
+		if ((this.edges[key][0] === fromNode && this.edges[key][1] === toNode) || 
+			(this.edges[key][0] === toNode && this.edges[key][1] === fromNode)) {
+			return true;
+		}
+	}
+	return false;
 };
 
 // Connects two nodes in a graph by adding an edge between them.
-// adding an edge would just mean making that connection between two nodes
-// loop through the array 
-// if (this.edgesArr[i] == fromNode) where every this.edgesArr[i] = [nodeValue]
-	// then push in the toNode value
-// since we have the array of references, we want each element to be a node array which contains another reference
-// fromNode ex is the value: '3' 
+// now all we are using the edges object
+// set the key in the object to equal from node and the value to an array with both fromNode and toNode
+	// like how I first thought but modify and make it look cleaner
+// that way there will be a reference to both in one object property
+// this will look like {1: [1, 2]}
 Graph.prototype.addEdge = function(fromNode, toNode) {
- 	for (var i = 0; i < this.edgesArr.length; i++) {
- 		// console.log('this issss position 0:' + this.edgesArr[0])
- 		// console.log('this is i value:' + this.edgesArr[i])
- 		if (this.edgesArr[i][0] === fromNode) {
- 			this.edgesArr[i].push(toNode);
- 			console.log('this is the connection: ' + this.edgesArr[i])
- 			// console.log('the extra' + this.edgesArr[0])
- 		}
- 		if (this.edgesArr[i][0] === toNode) {
- 			this.edgesArr[i].push(fromNode);
- 		}
- 		// if (this.edgesArr[i] == toNode) {
- 		// 	this.edgesArr[i].push(fromNode);
- 		// }
- 	}
- 	console.log('this is the edgeArr: ' + this.edgesArr)
+ 	this.edges[fromNode] = [fromNode, toNode];
+ 	console.log('this is the edges object: ' + this.edges)
 };
 
 // Remove an edge between any two specified (by value) nodes.
-// takes out fromNode from toNode array
-// loop through the edgesArr
-	// if this.edgesArr[i][0] === fromNode
-		// loop through the array that contains the edge between fromNode and toNode
-			// if this.edgesArr[i] includes toNode
-				// then we want to splice the indexof toNode
+// same concept as hasEdge
+// loop through the object
+// check if the positions equal fromNode or toNode
+	// instead of returning we would delete
+
 Graph.prototype.removeEdge = function(fromNode, toNode) {
-	for (var i = 0; i < this.edgesArr.length; i++) {
-		if (this.edgesArr[i][0] === fromNode) {
-			for (var j = 0; j < this.edgesArr[i].length; j++) {
-				console.log('this is the inside arr' + this.edgesArr[i][j])
-				if (this.edgesArr[i][j] === toNode) {
-					this.edgesArr[i].splice(j, 1);
-				}
-			}
-		}
-		if (this.edgesArr[i][0] === toNode) {
-			for (var k = 0; k < this.edgesArr[i].length; k++) {
-				if (this.edgesArr[i][k] === fromNode) {
-					this.edgesArr[i].splice(k, 1);
-				}
-			}
+	for (var key in this.edges) {
+		if ((this.edges[key][0] === fromNode && this.edges[key][1] === toNode)  || 
+			(this.edges[key][0] === toNode && this.edges[key][1] === fromNode)){
+			delete this.edges[fromNode];
 		}
 	}
-
 };
 
 // Pass in a callback which will be executed on each node of the graph.
@@ -110,7 +90,9 @@ Graph.prototype.removeEdge = function(fromNode, toNode) {
 	// apply the cb on each element in the array
 // return
 Graph.prototype.forEachNode = function(cb) {
-
+	for (var node in this.nodes) {
+		cb(this.nodes[node]);
+	}
 };
 
 /*
